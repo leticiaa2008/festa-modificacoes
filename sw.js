@@ -1,10 +1,10 @@
-const CACHE_NAME = 'sorvete-front';
+const CACHE_NAME = 'sorvete-front-v1';
 const ASSETS = [
     './',
     './index.html',
     './manifest.json',
     './assets/images/logo.png',
-    './images/logo64.jpg',
+    './images/logo64.png',
     './images/logo512.jpg',
     './assets/images/banner.png',
     './assets/images/whatsapp.png'
