@@ -1,22 +1,22 @@
 {
-    "name": "Arraiá São João",
-    "short_name": "Arraiá",
-    "start_url": "./index.html",
+    "name": "Scoop Sorveteria",
+    "short_name": "Scoop",
+    "start_url": ".",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#FEFEE1",
-    "description": "Cardápio digital Arraiá São João",
+    "description": "Cardápio digital Scoop Sorveteria",
     "icons": [
         {
-            "src": "./images/logo64.png",
-            "sizes": "192x192",
+            "src": "./images/logo512.png",
+            "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "./images/logo512.jpg",
+            "src": "./images/logo512.png",
             "sizes": "512x512",
-            "type": "image/jpeg",
+            "type": "image/png",
             "purpose": "any"
         }
     ]
