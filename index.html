@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arraiá Junino - São João</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF8C00">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="./images/logo64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/logo64.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logo64.png">
+    <link rel="icon" type="image/png" href="./images/logo64.png">
+    <link rel="shortcut icon" href="./images/logo64.png" type="image/x-icon">
+    <meta name="msapplication-TileImage" content="./images/logo64.png">
+    <meta property="og:image" content="./images/logo64.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Itim&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        titulo: ["Fredoka One", "cursive"],
+                        texto: ["Itim", "cursive"]
+                    },
+                    colors: {
+                        primary: "#E63946",    // Vermelho Bandeirinha
+                        secondary: "#FFB703",  // Amarelo Milho
+                        accent: "#FB8500",     // Laranja Fogueira
+                        cream: "#FEFAE0",      // Bege Palha
+                        dark: "#603808"        // Marrom Madeira
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Adicionando um padrão de "retalhos" ou bandeirinhas no fundo do header e footer */
+        .bg-pattern {
+            background-image: radial-gradient(#FB8500 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .bandeirinhas {
+            background: repeating-linear-gradient(45deg, #E63946, #E63946 10px, #FFB703 10px, #FFB703 20px, #FB8500 20px, #FB8500 30px);
+            height: 6px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="font-texto bg-cream text-dark">
+    <div class="bandeirinhas"></div>
+
+    <div id="fogueira-container" class="fixed pointer-events-none z-[999] opacity-0" style="left: 0px; top: 0px;">
+    <div class="madeiras text-2xl">🪵</div>
+</div>
+
+<style>
+    /* Estilos e Animações da Fogueira */
+    #fogueira-container {
+        transform: translate(-50%, -70%);
+        transition: opacity 0.3s ease;
+    }
+    
+    /* Centraliza as madeirinhas na base */
+    .madeiras {
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 20px;
+        z-index: 10;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+
+    /* Estilo de cada pedacinho de chama */
+    .chama-particula {
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        border-radius: 50% 50% 20% 50%;
+        transform: translateX(-50%) rotate(-45deg);
+        animation: queimarFogo 0.6s ease-out forwards;
+        mix-blend-mode: screen;
+    }
+
+    /* Animação que faz o fogo subir, mudar de cor e sumir */
+    @keyframes queimarFogo {
+        0% {
+            width: 15px;
+            height: 15px;
+            background-color: #FFB703; /* Amarelo Milho */
+            transform: translateX(-50%) translateY(0) rotate(-45deg) scale(1);
+            opacity: 1;
+            filter: blur(1px);
+        }
+        50% {
+            background-color: #FB8500; /* Laranja Fogueira */
+            filter: blur(2px);
+        }
+        100% {
+            width: 5px;
+            height: 5px;
+            background-color: #E63946; /* Vermelho Bandeirinha */
+            /* Joga a chama para cima e joga um vento aleatório para os lados */
+            transform: translateX(calc(-50% + var(--vento))) translateY(-60px) rotate(-45deg) scale(0.2);
+            opacity: 0;
+            filter: blur(4px);
+        }
+    }
+</style>
+
+<script>
+    const containerFogueira = document.getElementById('fogueira-container');
+
+    // Segue o mouse de forma ultra responsiva
+    window.addEventListener('mousemove', (e) => {
+        if (containerFogueira.style.opacity === '0' || containerFogueira.style.opacity === '') {
+            containerFogueira.style.opacity = '1';
+        }
+        
+        containerFogueira.style.left = e.clientX + 'px';
+        containerFogueira.style.top = e.clientY + 'px';
+
+        // Cria as partículas de fogo continuamente conforme o mouse mexe
+        criarChama();
+    });
+
+    // Função que gera os pedacinhos de fogo se mexendo
+    function criarChama() {
+        const chama = document.createElement('div');
+        chama.className = 'chama-particula';
+
+        // Cria um efeito de vento aleatório para a chama subir tremblando pra esquerda ou direita
+        const ventoAleatorio = Math.floor(Math.random() * 40) - 20 + 'px';
+        chama.style.setProperty('--vento', ventoAleatorio);
+
+        // Tamanhos levemente diferentes para dar naturalidade
+        const tamanhoAleatorio = Math.random() * 10 + 10 + 'px';
+        chama.style.width = tamanhoAleatorio;
+        chama.style.height = tamanhoAleatorio;
+
+        containerFogueira.appendChild(chama);
+
+        // Remove a partícula depois que a animação de sumir termina (0.6 segundos)
+        setTimeout(() => {
+            chama.remove();
+        }, 600);
+    }
+
+    // Esconde tudo se o mouse sair da janela
+    window.addEventListener('mouseout', () => {
+        containerFogueira.style.opacity = '0';
+    });
+</script>
+
+    <div id="lgpd-caipira" class="fixed bottom-0 left-0 w-full bg-dark text-cream p-4 z-[100] shadow-[0_-5px_15px_rgba(0,0,0,0.3)] border-t-4 border-secondary flex flex-col md:flex-row justify-between items-center gap-4 hidden">
+    <p class="text-sm md:text-base font-texto text-center md:text-left">
+        🤠 <strong>Uai, preste atenção sô!</strong> Para navegar no nosso Arraiá, você precisa saber que seus dados tão guardado num baú bem trancado com chave. Nós usa cookies pra deixar a quermesse mais ajeitada. Aceita?
+    </p>
+    <button onclick="aceitarLgpd()" class="bg-secondary text-dark px-6 py-2 rounded-full font-titulo text-sm uppercase shadow-md active:scale-95 transition-all whitespace-nowrap">
+        Aceito, sô!
+    </button>
+</div>
+
+
+<script>
+    // Lógica para exibir/esconder a LGPD
+    function verificarLgpd() {
+        if (!localStorage.getItem('lgpd_aceita')) {
+            document.getElementById('lgpd-caipira').classList.remove('hidden');
+        }
+    }
+    function aceitarLgpd() {
+        localStorage.setItem('lgpd_aceita', 'true');
+        document.getElementById('lgpd-caipira').classList.add('hidden');
+    }
+    // Chame essa função no final do seu script ou no window.load
+    window.addEventListener('DOMContentLoaded', verificarLgpd);
+</script>
+
+    <header class="flex justify-between items-center px-6 py-4 md:px-16 bg-white shadow-md">
+        <img src="./assets/images/logo.png" class="w-20 md:w-24" alt="Logo">
+        <button id="menu-btn" class="md:hidden flex flex-col gap-1 relative z-20">
+            <span class="linha w-6 h-0.5 bg-dark transition-all duration-300"></span>
+            <span class="linha w-6 h-0.5 bg-dark transition-all duration-300"></span>
+            <span class="linha w-6 h-0.5 bg-dark transition-all duration-300"></span>
+        </button>
+
+        <nav id="menu" class="hidden absolute top-20 left-0 w-full bg-white text-center shadow-md md:static md:block md:w-auto md:shadow-none">
+            <ul class="flex flex-col md:flex-row gap-6 p-6 md:p-0 font-medium">
+                <li><a href="#cardapio" class="hover:text-primary transition">O Arraiá do Sabor</a></li>
+                <li><a href="#footer" class="hover:text-primary transition">Nossas comidas</a></li>
+                <li><a href="https://wa.me/5515987654321" class="hover:text-primary transition">Whatsapp</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="flex flex-col md:flex-row items-center justify-between px-6 md:px-16 py-16 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] bg-opacity-10">
+            <div class="md:w-1/2 text-center md:text-left">
+                <h1 class="font-titulo text-4xl md:text-6xl mb-6 leading-tight text-accent">
+                    Êta trem bão!<br>
+                    <span class="text-primary">Arraiá de São João</span>
+                </h1>
+                <p class="mb-8 text-dark text-xl font-medium">Os melhores sabores da roça perto de você!</p>
+                <a href="#cardapio" class="inline-block bg-primary text-white px-10 py-4 rounded-full shadow-[0_5px_0_#9d1d27] hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-wider font-titulo">
+                    Ver o cardápio
+                </a>
+            </div>
+            <div class="md:w-1/2 mt-10 md:mt-0">
+                <img src="./assets/images/banner.png" class="w-full max-w-md mx-auto drop-shadow-2xl" alt="Banner">
+            </div>
+        </section>
+
+        <section id="cardapio" class="border-t-4 border-dashed border-accent w-full max-w-[700px] mx-auto mt-24 pt-12 pb-4 px-4 text-center">
+            <h1 class="text-4xl font-titulo text-primary mb-2">Cardápio do Arraiá</h1>
+            <p class="text-dark mb-6">Escolha sua comida favorita!</p>
+
+            <nav id="nav-categorias" class="overflow-x-auto whitespace-nowrap snap-x flex gap-2 mt-6 pb-4">
+                <div class="animate-pulse flex gap-2">
+                    <div class="h-8 w-20 bg-gray-300 rounded-full"></div>
+                    <div class="h-8 w-20 bg-gray-300 rounded-full"></div>
+                    <div class="h-8 w-20 bg-gray-300 rounded-full"></div>
+                </div>
+            </nav>
+
+            <div id="produtos-container" class="mt-8">
+                <div id="categoria-titulo" class="text-left text-primary font-titulo text-[24px] mb-4 border-b-2 border-secondary inline-block">
+                    Iniciando...
+                </div>
+                <div id="lista-produtos" class="grid grid-cols-2 gap-4">
+                    </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer" class="bg-dark text-secondary text-center py-14 px-6 mt-20 relative">
+        <div class="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180">
+            </div>
+        <h3 class="font-titulo text-3xl mb-4 text-white">Arraiá de São João</h3>
+        <p class="text-lg">📍 Rua do milho, 120 - Vila Junina</p>
+        <p class="text-lg">📱 WhatsApp: (15) 99682-6359</p>
+        <p class="text-lg">⏰ Aberto das 13h às 22h</p>
+        <div class="mt-6 opacity-50 text-sm">Feito com carinho no Arraiá 2026</div>
+    </footer>
+
+    <a href="https://wa.me/5515996826359" class="fixed bottom-6 right-6 z-40 bg-green-500 p-3 rounded-full shadow-2xl hover:scale-110 transition">
+        <img src="./assets/images/whatsapp.png" class="w-10" alt="WhatsApp">
+    </a>
+
+    <div id="detalhes-modal" class="fixed inset-0 bg-dark/80 z-[80] flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300 px-4">
+        <div class="bg-cream w-full max-w-[400px] rounded-[30px] overflow-hidden border-4 border-secondary shadow-2xl relative flex flex-col" id="detalhes-modal-content">
+            <button onclick="fecharModalDetalhes()" class="absolute top-4 right-4 bg-primary text-white w-10 h-10 rounded-full flex justify-center items-center font-bold text-2xl shadow-md z-10 hover:bg-dark transition-all">&times;</button>
+            <div class="w-full h-[280px] bg-white flex justify-center items-center p-8 relative">
+                <img id="detalhes-img" src="" alt="Produto" class="w-full h-full object-contain drop-shadow-xl relative z-10 transition-transform duration-500 hover:scale-105">
+            </div>
+            <div class="p-6">
+                <h2 id="detalhes-nome" class="text-3xl font-titulo text-dark mb-1">Nome</h2>
+                <p id="detalhes-preco" class="text-2xl font-bold text-primary mb-4">R$ 0,00</p>
+                <div class="bg-secondary/20 rounded-xl p-4 mb-6 border border-secondary/30">
+                    <p id="detalhes-desc" class="text-dark text-md leading-relaxed">Descrição...</p>
+                </div>
+                <button id="detalhes-btn-add" class="w-full bg-accent text-white py-4 rounded-xl text-lg font-titulo shadow-lg active:scale-95 transition-all">
+                    Adicionar à Sacola
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="carrinho-footer" class="fixed bottom-0 left-0 w-full bg-primary text-white p-4 z-50 shadow-[0_-5px_15px_rgba(0,0,0,0.2)] transform translate-y-full transition-transform duration-300 flex justify-between items-center cursor-pointer" onclick="abrirModalCarrinho()">
+        <div>
+            <p class="text-xs uppercase font-bold opacity-80">Sacola do Arraiá</p>
+            <p class="text-xl font-titulo">Total: <span id="carrinho-total">R$ 0,00</span></p>
+        </div>
+        <button class="bg-white text-primary px-6 py-2 rounded-full font-titulo text-sm uppercase">Carrinho!</button>
+    </div>
+
+    <div id="carrinho-modal" class="fixed inset-0 bg-dark/70 z-[60] flex flex-col justify-end sm:justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-cream w-full sm:w-[500px] h-[85vh] sm:h-auto sm:max-h-[85vh] rounded-t-3xl sm:rounded-2xl flex flex-col transform translate-y-full sm:translate-y-0 sm:scale-95 transition-transform duration-300" id="carrinho-modal-content">
+            <div class="p-5 border-b border-secondary flex justify-between items-center bg-secondary/10">
+                <h2 class="text-2xl font-titulo text-dark">Sua Sacola</h2>
+                <button onclick="fecharModalCarrinho()" class="text-3xl font-bold text-primary hover:text-dark">&times;</button>
+            </div>
+            <div id="carrinho-itens-container" class="p-5 flex-1 overflow-y-auto flex flex-col gap-4"></div>
+            <div class="p-5 border-t border-secondary bg-white">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-bold">Total do Pedido:</span>
+                    <span id="modal-carrinho-total" class="text-2xl font-titulo text-primary">R$ 0,00</span>
+                </div>
+                <button onclick="fecharPedido()" id="btn-fechar-pedido" class="w-full bg-primary text-white py-4 rounded-xl text-lg font-titulo shadow-lg active:scale-95 transition-all">
+                    Finalizar Pedido (Mandar Localização)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // O JavaScript permanece EXATAMENTE igual ao seu original para não quebrar a estrutura funcional.
+        const API_URL = 'https://festajunina-back.vercel.app/api';
+        const navCategorias = document.getElementById('nav-categorias');
+        const listaProdutos = document.getElementById('lista-produtos');
+        const categoriaTitulo = document.getElementById('categoria-titulo');
+        const menuBtn = document.getElementById("menu-btn");
+        const menu = document.getElementById("menu");
+        const linhas = document.querySelectorAll("#menu-btn .linha");
+        
+        let categoriasData = [];
+        let carrinho = [];
+
+        async function carregarCategorias() {
+            try {
+                const response = await fetch(`${API_URL}/categorias`);
+                categoriasData = await response.json();
+                renderizarBotoesCategorias();
+                if (categoriasData.length > 0) {
+                    selecionarCategoria(categoriasData[0].id, categoriasData[0].nome);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar categorias:', error);
+                navCategorias.innerHTML = '<p class="text-red-500">Erro ao carregar menu.</p>';
+            }
+        }
+
+        function renderizarBotoesCategorias() {
+            navCategorias.innerHTML = '';
+            categoriasData.forEach(cat => {
+                const btn = document.createElement('button');
+                // Cores dos botões alteradas para o tema
+                btn.className = `btn-cat snap-start px-6 py-2 rounded-full font-bold text-sm transition-all duration-150 cursor-pointer flex-shrink-0 bg-white text-dark border border-secondary shadow-sm`;
+                btn.innerText = cat.nome;
+                btn.dataset.id = cat.id;
+                btn.onclick = () => selecionarCategoria(cat.id, cat.nome);
+                navCategorias.appendChild(btn);
+            });
+        }
+
+        async function selecionarCategoria(id, nome) {
+            categoriaTitulo.innerText = nome;
+            const botoes = document.querySelectorAll('.btn-cat');
+            botoes.forEach(btn => {
+                if (String(btn.dataset.id) === String(id)) {
+                    btn.classList.add('bg-secondary', 'text-dark', 'scale-105');
+                    btn.classList.remove('bg-white');
+                } else {
+                    btn.classList.remove('bg-secondary', 'text-dark', 'scale-105');
+                    btn.classList.add('bg-white');
+                }
+            });
+            carregarProdutos(id);
+        }
+
+        async function carregarProdutos(categoriaId) {
+            listaProdutos.innerHTML = '<div class="col-span-2 py-10 flex justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>';
+            try {
+                const response = await fetch(`${API_URL}/produtos?categoriaId=${categoriaId}`);
+                const produtos = await response.json();
+                renderizarProdutos(produtos);
+            } catch (error) {
+                listaProdutos.innerHTML = '<p class="col-span-2 text-red-500">Erro ao carregar produtos.</p>';
+            }
+        }
+
+        function renderizarProdutos(produtos) {
+            listaProdutos.innerHTML = '';
+            if (produtos.length === 0) {
+                listaProdutos.innerHTML = '<p class="col-span-2 text-gray-400 py-10">Nenhum produto aqui.</p>';
+                return;
+            }
+            produtos.forEach(p => {
+                const precoFormatado = p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                const imgSource = (p.imagem && p.imagem.startsWith('http')) ? p.imagem : `./assets/images/${p.imagem || 'logo.png'}`;
+                
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-[20px] p-3 shadow-sm border-2 border-secondary/20 relative flex flex-col hover:border-accent transition-all group";
+                card.innerHTML = `
+                    <div class="absolute inset-0 z-0 cursor-pointer" onclick="abrirModalDetalhes('${p.nome}', ${p.preco}, '${p.descricao || ''}', '${imgSource}', '${p.id}')"></div>
+                    <img src="${imgSource}" class="w-full h-24 object-contain mb-2 pointer-events-none relative z-10 group-hover:scale-110 transition-transform" onerror="this.src='./assets/images/logo.png'">
+                    <div class="text-left w-full mt-auto relative z-10 pointer-events-none">
+                        <h4 class="font-bold text-dark text-sm leading-tight">${p.nome}</h4>
+                        <p class="text-primary font-black text-xs">${precoFormatado}</p>
+                    </div>
+                    <button onclick="adicionarItem('${p.id}', '${p.nome}', ${p.preco})" class="w-full bg-secondary text-dark py-2 rounded-xl text-xs font-bold mt-3 shadow-sm active:scale-95 transition-all z-10 relative uppercase">Adicionar</button>
+                `;
+                listaProdutos.appendChild(card);
+            });
+        }
+
+        // --- Restante da lógica (Carrinho, Modais, etc) permanece intacta ---
+        function adicionarItem(id, nome, preco) {
+    if (navigator.vibrate) navigator.vibrate(50);
+    
+    // Procura se o produto já está na sacola
+    const index = carrinho.findIndex(item => item.id === id);
+    
+    if (index !== -1) {
+        // Se já estiver na sacola, verifica se já atingiu o limite de 50 unidades DESTE produto
+        if (carrinho[index].quantidade >= 50) {
+            alert(`Eita sô! Você já colocou 50 unidades de "${nome}" na sacola. Isso é tudo que a nossa cozinha consegue preparar de uma vez para esse prato!`);
+            return; // Barra a adição e sai da função
+        }
+        // Se tiver menos de 50, adiciona mais um normalmente
+        carrinho[index].quantidade += 1;
+    } else {
+        // Se for a primeira vez adicionando o produto, entra com quantidade 1
+        carrinho.push({ id, nome, preco, quantidade: 1 });
+    }
+    
+    atualizarCarrinho();
+}
+
+        function atualizarCarrinho() {
+            localStorage.setItem('scoop_carrinho', JSON.stringify(carrinho));
+            const total = carrinho.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+            const totalF = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('carrinho-total').innerText = totalF;
+            document.getElementById('modal-carrinho-total').innerText = totalF;
+            if (carrinho.length > 0) {
+                document.getElementById('carrinho-footer').classList.remove('translate-y-full');
+            } else {
+                document.getElementById('carrinho-footer').classList.add('translate-y-full');
+            }
+            renderizarItensModal();
+        }
+
+        function renderizarItensModal() {
+            const container = document.getElementById('carrinho-itens-container');
+            container.innerHTML = '';
+            carrinho.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center border-b border-gray-100 pb-4";
+                div.innerHTML = `
+                    <div class="flex-1">
+                        <h4 class="font-bold text-dark">${item.nome}</h4>
+                        <p class="text-primary font-bold">${(item.preco * item.quantidade).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
+                    </div>
+                    <div class="flex items-center gap-3 bg-secondary/20 p-2 rounded-xl">
+                        <button onclick="mudarQuantidade('${item.id}', -1)" class="w-8 h-8 bg-white rounded-lg font-bold">-</button>
+                        <span class="font-bold">${item.quantidade}</span>
+                        <button onclick="mudarQuantidade('${item.id}', 1)" class="w-8 h-8 bg-white rounded-lg font-bold">+</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function mudarQuantidade(id, delta) {
+    const index = carrinho.findIndex(item => item.id === id);
+    if (index !== -1) {
+        // Se o usuário clicar em "+" (delta = 1) e já tiver 50 itens, barra a ação!
+        if (delta === 1 && carrinho[index].quantidade >= 50) {
+            alert(`Eita sô! O limite da cozinha é de 50 unidades para cada produto. Segura a fofura de "${carrinho[index].nome}"!`);
+            return; // Interrompe e não deixa somar
+        }
+
+        carrinho[index].quantidade += delta;
+        if (carrinho[index].quantidade <= 0) carrinho.splice(index, 1);
+        if (carrinho.length === 0) fecharModalCarrinho();
+        atualizarCarrinho();
+    }
+}
+
+        function abrirModalDetalhes(nome, preco, desc, img, id) {
+            document.getElementById('detalhes-nome').innerText = nome;
+            document.getElementById('detalhes-preco').innerText = preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('detalhes-desc').innerText = desc;
+            document.getElementById('detalhes-img').src = img;
+            document.getElementById('detalhes-btn-add').onclick = () => {
+                adicionarItem(id, nome, preco);
+                fecharModalDetalhes();
+            };
+            document.getElementById('detalhes-modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('detalhes-modal-content').classList.replace('scale-95', 'scale-100');
+        }
+
+        function fecharModalDetalhes() {
+            document.getElementById('detalhes-modal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('detalhes-modal-content').classList.replace('scale-100', 'scale-95');
+        }
+
+        function abrirModalCarrinho() {
+            document.getElementById('carrinho-modal').classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('carrinho-modal-content').classList.remove('translate-y-full');
+        }
+
+        function fecharModalCarrinho() {
+            document.getElementById('carrinho-modal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('carrinho-modal-content').classList.add('translate-y-full');
+        }
+
+        function fecharPedido() {
+    // Verifica se tem algum produto abusando do limite antes de mandar pro GPS
+    const temExcesso = carrinho.some(item => item.quantidade > 50);
+
+    if (temExcesso) {
+        alert("Eita! Tem algum produto aí na sacola com mais de 50 unidades. Ajeita essa quantidade aí sô, senão a cozinha não aguenta!");
+        return; // Bloqueia o envio do pedido
+    }
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            alert(`Pedido enviado para a quermesse!\nLocalização: ${pos.coords.latitude}, ${pos.coords.longitude}`);
+            carrinho = [];
+            atualizarCarrinho();
+            fecharModalCarrinho();
+        }, () => {
+            alert("Pedido enviado sem GPS.");
+            carrinho = [];
+            atualizarCarrinho();
+            fecharModalCarrinho();
+        });
+    }
+}
+
+        menuBtn.addEventListener("click", () => {
+            const aberto = !menu.classList.contains("hidden");
+            menu.classList.toggle("hidden");
+            if (!aberto) {
+                linhas[0].classList.add("rotate-45", "translate-y-1.5");
+                linhas[1].classList.add("opacity-0");
+                linhas[2].classList.add("-rotate-45", "-translate-y-1.5");
+            } else {
+                linhas[0].classList.remove("rotate-45", "translate-y-1.5");
+                linhas[1].classList.remove("opacity-0");
+                linhas[2].classList.remove("-rotate-45", "-translate-y-1.5");
+            }
+        });
+
+        const salvo = localStorage.getItem('scoop_carrinho');
+        if (salvo) {
+            carrinho = JSON.parse(salvo);
+            atualizarCarrinho();
+        }
+        carregarCategorias();
+
+        if('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker no Arraiá! 🌽', reg))
+                .catch(err => console.error('Erro na fogueira: ', err));
+            });
+        }
+    </script>
+
+    
+</body>
+</html>

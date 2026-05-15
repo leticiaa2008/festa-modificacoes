@@ -1,0 +1,23 @@
+{
+    "name": "Arraiá São João",
+    "short_name": "Arraiá",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#FEFEE1",
+    "description": "Cardápio digital Arraiá São João",
+    "icons": [
+        {
+            "src": "./images/logo512.jpg",
+            "sizes": "512x512",
+            "type": "image/jpg",
+            "purpose": "any"
+        },
+        {
+            "src": "./images/logo512.jpg",
+            "sizes": "512x512",
+            "type": "image/jpg",
+            "purpose": "any"
+        }
+    ]
+}
